@@ -1,0 +1,173 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.01//EN" "http://www.w3.org/TR/html4/strict.dtd">
+<html>
+<head>
+  <meta http-equiv="Content-Type" content="text/html; charset=utf-8">
+  <meta http-equiv="Content-Style-Type" content="text/css">
+  <title></title>
+  <meta name="Generator" content="Cocoa HTML Writer">
+  <meta name="CocoaVersion" content="2685.6">
+  <style type="text/css">
+    p.p1 {margin: 0.0px 0.0px 0.0px 0.0px; font: 12.0px Helvetica}
+    p.p2 {margin: 0.0px 0.0px 0.0px 0.0px; font: 12.0px Helvetica; min-height: 14.0px}
+  </style>
+</head>
+<body>
+<p class="p1">&lt;!DOCTYPE html&gt;</p>
+<p class="p1">&lt;html lang="ca"&gt;</p>
+<p class="p1">&lt;head&gt;</p>
+<p class="p1"><span class="Apple-converted-space">    </span>&lt;meta charset="UTF-8"&gt;</p>
+<p class="p1"><span class="Apple-converted-space">    </span>&lt;meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no"&gt;</p>
+<p class="p1"><span class="Apple-converted-space">    </span>&lt;title&gt;Puzzle Ciclista Toledo&lt;/title&gt;</p>
+<p class="p1"><span class="Apple-converted-space">    </span>&lt;script src="https://cdn.tailwindcss.com"&gt;&lt;/script&gt;</p>
+<p class="p1"><span class="Apple-converted-space">    </span>&lt;style&gt;</p>
+<p class="p1"><span class="Apple-converted-space">        </span>body { touch-action: none; background-color: #1a1a1a; color: white; overflow: hidden; }</p>
+<p class="p2"><span class="Apple-converted-space">        </span></p>
+<p class="p1"><span class="Apple-converted-space">        </span>/* El puzzle manté la proporció de la imatge vertical */</p>
+<p class="p1"><span class="Apple-converted-space">        </span>#puzzle-board {</p>
+<p class="p1"><span class="Apple-converted-space">            </span>display: grid;</p>
+<p class="p1"><span class="Apple-converted-space">            </span>grid-template-columns: repeat(3, 1fr);</p>
+<p class="p1"><span class="Apple-converted-space">            </span>grid-template-rows: repeat(3, 1fr);</p>
+<p class="p1"><span class="Apple-converted-space">            </span>gap: 2px;</p>
+<p class="p1"><span class="Apple-converted-space">            </span>width: 90vw;</p>
+<p class="p1"><span class="Apple-converted-space">            </span>max-width: 400px;</p>
+<p class="p1"><span class="Apple-converted-space">            </span>aspect-ratio: 2 / 3; /* Proporció del pòster */</p>
+<p class="p1"><span class="Apple-converted-space">            </span>background-color: #333;</p>
+<p class="p1"><span class="Apple-converted-space">            </span>border: 4px solid #d4af37; /* Marc daurat com el pòster */</p>
+<p class="p1"><span class="Apple-converted-space">            </span>margin: 0 auto;</p>
+<p class="p1"><span class="Apple-converted-space">        </span>}</p>
+<p class="p2"><br></p>
+<p class="p1"><span class="Apple-converted-space">        </span>.piece {</p>
+<p class="p1"><span class="Apple-converted-space">            </span>background-image: url('toledo.jpg');</p>
+<p class="p1"><span class="Apple-converted-space">            </span>background-size: 300% 300%; /* Perquè cada peça mostri només la seva part */</p>
+<p class="p1"><span class="Apple-converted-space">            </span>cursor: pointer;</p>
+<p class="p1"><span class="Apple-converted-space">            </span>transition: all 0.2s ease;</p>
+<p class="p1"><span class="Apple-converted-space">            </span>border-radius: 4px;</p>
+<p class="p1"><span class="Apple-converted-space">        </span>}</p>
+<p class="p2"><br></p>
+<p class="p1"><span class="Apple-converted-space">        </span>.empty {</p>
+<p class="p1"><span class="Apple-converted-space">            </span>background: #1a1a1a !important;</p>
+<p class="p1"><span class="Apple-converted-space">            </span>cursor: default;</p>
+<p class="p1"><span class="Apple-converted-space">        </span>}</p>
+<p class="p2"><br></p>
+<p class="p1"><span class="Apple-converted-space">        </span>.win-overlay {</p>
+<p class="p1"><span class="Apple-converted-space">            </span>display: none;</p>
+<p class="p1"><span class="Apple-converted-space">            </span>position: fixed;</p>
+<p class="p1"><span class="Apple-converted-space">            </span>inset: 0;</p>
+<p class="p1"><span class="Apple-converted-space">            </span>background: rgba(0,0,0,0.8);</p>
+<p class="p1"><span class="Apple-converted-space">            </span>z-index: 50;</p>
+<p class="p1"><span class="Apple-converted-space">            </span>flex-direction: column;</p>
+<p class="p1"><span class="Apple-converted-space">            </span>align-items: center;</p>
+<p class="p1"><span class="Apple-converted-space">            </span>justify-content: center;</p>
+<p class="p1"><span class="Apple-converted-space">        </span>}</p>
+<p class="p1"><span class="Apple-converted-space">    </span>&lt;/style&gt;</p>
+<p class="p1">&lt;/head&gt;</p>
+<p class="p1">&lt;body class="flex flex-col min-h-screen font-sans"&gt;</p>
+<p class="p2"><br></p>
+<p class="p1"><span class="Apple-converted-space">    </span>&lt;header class="text-center py-6"&gt;</p>
+<p class="p1"><span class="Apple-converted-space">        </span>&lt;h1 class="text-xl font-black italic text-yellow-500 uppercase tracking-tighter"&gt;III VUELTA CICLISTA&lt;/h1&gt;</p>
+<p class="p1"><span class="Apple-converted-space">        </span>&lt;p class="text-[10px] uppercase font-bold text-gray-400"&gt;Puzzle de lliscament clàssic&lt;/p&gt;</p>
+<p class="p1"><span class="Apple-converted-space">    </span>&lt;/header&gt;</p>
+<p class="p2"><br></p>
+<p class="p1"><span class="Apple-converted-space">    </span>&lt;main class="flex-grow flex items-center justify-center"&gt;</p>
+<p class="p1"><span class="Apple-converted-space">        </span>&lt;div id="puzzle-board"&gt;&lt;/div&gt;</p>
+<p class="p1"><span class="Apple-converted-space">    </span>&lt;/main&gt;</p>
+<p class="p2"><br></p>
+<p class="p1"><span class="Apple-converted-space">    </span>&lt;footer class="p-6 text-center"&gt;</p>
+<p class="p1"><span class="Apple-converted-space">        </span>&lt;button onclick="shuffleGame()" class="bg-yellow-600 text-black px-8 py-3 rounded-full font-black uppercase italic shadow-lg active:scale-95 transition-transform"&gt;</p>
+<p class="p1"><span class="Apple-converted-space">            </span>Barrejar Peçes</p>
+<p class="p1"><span class="Apple-converted-space">        </span>&lt;/button&gt;</p>
+<p class="p1"><span class="Apple-converted-space">        </span>&lt;p class="mt-8 text-[9px] text-gray-500 tracking-widest uppercase italic"&gt;By NeurekaLAB&lt;/p&gt;</p>
+<p class="p1"><span class="Apple-converted-space">    </span>&lt;/footer&gt;</p>
+<p class="p2"><br></p>
+<p class="p1"><span class="Apple-converted-space">    </span>&lt;!-- Pantalla de Victòria --&gt;</p>
+<p class="p1"><span class="Apple-converted-space">    </span>&lt;div id="win-screen" class="win-overlay"&gt;</p>
+<p class="p1"><span class="Apple-converted-space">        </span>&lt;h2 class="text-4xl font-black italic text-yellow-500 mb-2"&gt;VICTÒRIA!&lt;/h2&gt;</p>
+<p class="p1"><span class="Apple-converted-space">        </span>&lt;p class="text-white mb-8"&gt;Has completat el recorregut.&lt;/p&gt;</p>
+<p class="p1"><span class="Apple-converted-space">        </span>&lt;button onclick="shuffleGame()" class="bg-white text-black px-10 py-3 rounded-full font-bold uppercase"&gt;Tornar a jugar&lt;/button&gt;</p>
+<p class="p1"><span class="Apple-converted-space">    </span>&lt;/div&gt;</p>
+<p class="p2"><br></p>
+<p class="p1"><span class="Apple-converted-space">    </span>&lt;script&gt;</p>
+<p class="p1"><span class="Apple-converted-space">        </span>const board = document.getElementById('puzzle-board');</p>
+<p class="p1"><span class="Apple-converted-space">        </span>const winScreen = document.getElementById('win-screen');</p>
+<p class="p1"><span class="Apple-converted-space">        </span>let pieces = [0, 1, 2, 3, 4, 5, 6, 7, 8]; // 8 és el forat buit</p>
+<p class="p2"><span class="Apple-converted-space">        </span></p>
+<p class="p1"><span class="Apple-converted-space">        </span>// Crear el tauler inicial</p>
+<p class="p1"><span class="Apple-converted-space">        </span>function createBoard() {</p>
+<p class="p1"><span class="Apple-converted-space">            </span>board.innerHTML = '';</p>
+<p class="p1"><span class="Apple-converted-space">            </span>pieces.forEach((pos, index) =&gt; {</p>
+<p class="p1"><span class="Apple-converted-space">                </span>const div = document.createElement('div');</p>
+<p class="p1"><span class="Apple-converted-space">                </span>div.className = 'piece';</p>
+<p class="p1"><span class="Apple-converted-space">                </span>if (pos === 8) {</p>
+<p class="p1"><span class="Apple-converted-space">                    </span>div.classList.add('empty');</p>
+<p class="p1"><span class="Apple-converted-space">                </span>} else {</p>
+<p class="p1"><span class="Apple-converted-space">                    </span>// Càlcul de la part de la imatge que ha de mostrar cada peça</p>
+<p class="p1"><span class="Apple-converted-space">                    </span>const row = Math.floor(pos / 3);</p>
+<p class="p1"><span class="Apple-converted-space">                    </span>const col = pos % 3;</p>
+<p class="p1"><span class="Apple-converted-space">                    </span>div.style.backgroundPosition = `${col * 50}% ${row * 50}%`;</p>
+<p class="p1"><span class="Apple-converted-space">                </span>}</p>
+<p class="p2"><span class="Apple-converted-space">                </span></p>
+<p class="p1"><span class="Apple-converted-space">                </span>div.onclick = () =&gt; movePiece(index);</p>
+<p class="p1"><span class="Apple-converted-space">                </span>board.appendChild(div);</p>
+<p class="p1"><span class="Apple-converted-space">            </span>});</p>
+<p class="p1"><span class="Apple-converted-space">        </span>}</p>
+<p class="p2"><br></p>
+<p class="p1"><span class="Apple-converted-space">        </span>function movePiece(index) {</p>
+<p class="p1"><span class="Apple-converted-space">            </span>const emptyIndex = pieces.indexOf(8);</p>
+<p class="p1"><span class="Apple-converted-space">            </span>const validMoves = getValidMoves(emptyIndex);</p>
+<p class="p2"><br></p>
+<p class="p1"><span class="Apple-converted-space">            </span>if (validMoves.includes(index)) {</p>
+<p class="p1"><span class="Apple-converted-space">                </span>// Intercanviar posicions</p>
+<p class="p1"><span class="Apple-converted-space">                </span>[pieces[index], pieces[emptyIndex]] = [pieces[emptyIndex], pieces[index]];</p>
+<p class="p1"><span class="Apple-converted-space">                </span>createBoard();</p>
+<p class="p1"><span class="Apple-converted-space">                </span>checkWin();</p>
+<p class="p1"><span class="Apple-converted-space">            </span>}</p>
+<p class="p1"><span class="Apple-converted-space">        </span>}</p>
+<p class="p2"><br></p>
+<p class="p1"><span class="Apple-converted-space">        </span>function getValidMoves(emptyIdx) {</p>
+<p class="p1"><span class="Apple-converted-space">            </span>const moves = [];</p>
+<p class="p1"><span class="Apple-converted-space">            </span>const row = Math.floor(emptyIdx / 3);</p>
+<p class="p1"><span class="Apple-converted-space">            </span>const col = emptyIdx % 3;</p>
+<p class="p2"><br></p>
+<p class="p1"><span class="Apple-converted-space">            </span>if (row &gt; 0) moves.push(emptyIdx - 3); // A dalt</p>
+<p class="p1"><span class="Apple-converted-space">            </span>if (row &lt; 2) moves.push(emptyIdx + 3); // A baix</p>
+<p class="p1"><span class="Apple-converted-space">            </span>if (col &gt; 0) moves.push(emptyIdx - 1); // Esquerra</p>
+<p class="p1"><span class="Apple-converted-space">            </span>if (col &lt; 2) moves.push(emptyIdx + 1); // Dreta</p>
+<p class="p2"><span class="Apple-converted-space">            </span></p>
+<p class="p1"><span class="Apple-converted-space">            </span>return moves;</p>
+<p class="p1"><span class="Apple-converted-space">        </span>}</p>
+<p class="p2"><br></p>
+<p class="p1"><span class="Apple-converted-space">        </span>function shuffleGame() {</p>
+<p class="p1"><span class="Apple-converted-space">            </span>winScreen.style.display = 'none';</p>
+<p class="p1"><span class="Apple-converted-space">            </span>// Perquè sigui resoluble, fem moviments aleatoris reals des de la posició resolta</p>
+<p class="p1"><span class="Apple-converted-space">            </span>let iterations = 0;</p>
+<p class="p1"><span class="Apple-converted-space">            </span>let currentEmpty = pieces.indexOf(8);</p>
+<p class="p2"><span class="Apple-converted-space">            </span></p>
+<p class="p1"><span class="Apple-converted-space">            </span>const interval = setInterval(() =&gt; {</p>
+<p class="p1"><span class="Apple-converted-space">                </span>const moves = getValidMoves(pieces.indexOf(8));</p>
+<p class="p1"><span class="Apple-converted-space">                </span>const randomMove = moves[Math.floor(Math.random() * moves.length)];</p>
+<p class="p2"><span class="Apple-converted-space">                </span></p>
+<p class="p1"><span class="Apple-converted-space">                </span>const emptyIdx = pieces.indexOf(8);</p>
+<p class="p1"><span class="Apple-converted-space">                </span>[pieces[randomMove], pieces[emptyIdx]] = [pieces[emptyIdx], pieces[randomMove]];</p>
+<p class="p2"><span class="Apple-converted-space">                </span></p>
+<p class="p1"><span class="Apple-converted-space">                </span>createBoard();</p>
+<p class="p1"><span class="Apple-converted-space">                </span>iterations++;</p>
+<p class="p1"><span class="Apple-converted-space">                </span>if (iterations &gt; 30) clearInterval(interval);</p>
+<p class="p1"><span class="Apple-converted-space">            </span>}, 50);</p>
+<p class="p1"><span class="Apple-converted-space">        </span>}</p>
+<p class="p2"><br></p>
+<p class="p1"><span class="Apple-converted-space">        </span>function checkWin() {</p>
+<p class="p1"><span class="Apple-converted-space">            </span>const isWin = pieces.every((val, i) =&gt; val === i);</p>
+<p class="p1"><span class="Apple-converted-space">            </span>if (isWin) {</p>
+<p class="p1"><span class="Apple-converted-space">                </span>setTimeout(() =&gt; {</p>
+<p class="p1"><span class="Apple-converted-space">                    </span>winScreen.style.display = 'flex';</p>
+<p class="p1"><span class="Apple-converted-space">                </span>}, 500);</p>
+<p class="p1"><span class="Apple-converted-space">            </span>}</p>
+<p class="p1"><span class="Apple-converted-space">        </span>}</p>
+<p class="p2"><br></p>
+<p class="p1"><span class="Apple-converted-space">        </span>// Iniciar</p>
+<p class="p1"><span class="Apple-converted-space">        </span>createBoard();</p>
+<p class="p1"><span class="Apple-converted-space">    </span>&lt;/script&gt;</p>
+<p class="p1">&lt;/body&gt;</p>
+<p class="p1">&lt;/html&gt;</p>
+</body>
+</html>
