@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-    <title>Puzzle Toledo 4x4</title>
+    <title>Puzzle Toledo 4x4 - Pro</title>
     <script src="https://cdn.tailwindcss.com"></script>
     <style>
         body { 
@@ -14,7 +14,6 @@
             font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; 
         }
         
-        /* Tauler 4x4 amb la proporció del pòster (aprox 2:3) */
         #puzzle-board {
             display: grid;
             grid-template-columns: repeat(4, 1fr);
@@ -31,20 +30,15 @@
 
         .piece {
             background-image: url('Toledo.jpeg');
-            background-size: 400% 400%; /* Important per a 4x4 */
+            background-size: 400% 400%;
             cursor: pointer;
             transition: transform 0.1s;
             border-radius: 2px;
         }
 
-        .piece:active {
-            transform: scale(0.96);
-        }
+        .piece:active { transform: scale(0.96); }
 
-        .empty {
-            background: #0f172a !important;
-            cursor: default;
-        }
+        .empty { background: #0f172a !important; cursor: default; }
 
         .win-overlay {
             display: none;
@@ -57,13 +51,31 @@
             justify-content: center;
             text-align: center;
         }
+
+        .stat-box {
+            background: #1e293b;
+            padding: 5px 15px;
+            border-radius: 10px;
+            border: 1px solid #334155;
+        }
     </style>
 </head>
 <body class="flex flex-col min-h-screen">
 
-    <header class="text-center py-6">
-        <h1 class="text-2xl font-black italic text-yellow-400 uppercase tracking-tighter leading-none">III VUELTA CICLISTA</h1>
-        <p class="text-sm font-bold text-white uppercase tracking-widest mt-1">TOLEDO 4x4</p>
+    <header class="text-center py-4">
+        <h1 class="text-xl font-black italic text-yellow-400 uppercase tracking-tighter leading-none">III VUELTA CICLISTA</h1>
+        
+        <!-- CRONÒMETRE I RÈCORD -->
+        <div class="flex justify-center gap-4 mt-4">
+            <div class="stat-box">
+                <p class="text-[9px] uppercase font-bold text-slate-400">Temps</p>
+                <p id="timer" class="text-xl font-mono font-black text-white">00:00</p>
+            </div>
+            <div class="stat-box">
+                <p class="text-[9px] uppercase font-bold text-slate-400">Millor Rècord</p>
+                <p id="best-time" class="text-xl font-mono font-black text-yellow-500">--:--</p>
+            </div>
+        </div>
     </header>
 
     <main class="flex-grow flex items-center justify-center">
@@ -72,9 +84,9 @@
 
     <footer class="p-8 text-center">
         <button onclick="shuffleGame()" class="bg-yellow-500 hover:bg-yellow-400 text-black px-12 py-3 rounded-full font-black uppercase italic shadow-lg transition-all active:scale-95">
-            Barrejar Peçes
+            Barrejar peces
         </button>
-        <div class="mt-8">
+        <div class="mt-6">
             <a href="https://neurekalab.com" target="_blank" class="text-[10px] text-slate-500 tracking-[0.3em] uppercase font-bold italic">By NeurekaLAB</a>
         </div>
     </footer>
@@ -82,8 +94,10 @@
     <!-- Pantalla de Victòria -->
     <div id="win-screen" class="win-overlay">
         <div class="p-10">
-            <h2 class="text-5xl font-black italic text-yellow-400 mb-4 uppercase">ÈXIT TOTAL!</h2>
-            <p class="text-white text-lg mb-8">Has reconstruït el pòster de la Vuelta.</p>
+            <h2 class="text-5xl font-black italic text-yellow-400 mb-2 uppercase">FELICITATS!</h2>
+            <p class="text-white text-lg mb-1">Has completat la cursa en:</p>
+            <p id="final-time" class="text-4xl font-mono font-black text-white mb-8">00:00</p>
+            
             <button onclick="shuffleGame()" class="bg-white text-black px-12 py-4 rounded-full font-black uppercase tracking-widest shadow-2xl">
                 Tornar a jugar
             </button>
@@ -93,29 +107,44 @@
     <script>
         const board = document.getElementById('puzzle-board');
         const winScreen = document.getElementById('win-screen');
+        const timerDisplay = document.getElementById('timer');
+        const bestTimeDisplay = document.getElementById('best-time');
+        const finalTimeDisplay = document.getElementById('final-time');
+
         const size = 4;
         const totalPieces = size * size;
         let pieces = Array.from({length: totalPieces}, (_, i) => i);
-        const emptyValue = totalPieces - 1; // La peça 15 és el buit
+        const emptyValue = totalPieces - 1;
+
+        // Variables Cronòmetre
+        let timerInterval;
+        let seconds = 0;
+        let gameRunning = false;
+
+        // Carregar Rècord
+        let bestTime = localStorage.getItem('puzzle_toledo_best_time');
+        if (bestTime) bestTimeDisplay.innerText = formatTime(bestTime);
+
+        function formatTime(s) {
+            const mins = Math.floor(s / 60).toString().padStart(2, '0');
+            const secs = (s % 60).toString().padStart(2, '0');
+            return `${mins}:${secs}`;
+        }
 
         function createBoard() {
             board.innerHTML = '';
             pieces.forEach((pieceValue, index) => {
                 const div = document.createElement('div');
                 div.className = 'piece';
-                
                 if (pieceValue === emptyValue) {
                     div.classList.add('empty');
                 } else {
-                    // Càlcul de la posició del fons per a 4x4
                     const row = Math.floor(pieceValue / size);
                     const col = pieceValue % size;
-                    // En 4 files, els salts són de 33.333% (0, 33, 66, 100)
                     const xPercent = (col / (size - 1)) * 100;
                     const yPercent = (row / (size - 1)) * 100;
                     div.style.backgroundPosition = `${xPercent}% ${yPercent}%`;
                 }
-                
                 div.onclick = () => movePiece(index);
                 board.appendChild(div);
             });
@@ -124,7 +153,6 @@
         function movePiece(index) {
             const emptyIndex = pieces.indexOf(emptyValue);
             if (isAdjacent(index, emptyIndex)) {
-                // Intercanvi
                 [pieces[index], pieces[emptyIndex]] = [pieces[emptyIndex], pieces[index]];
                 createBoard();
                 checkWin();
@@ -141,8 +169,14 @@
 
         function shuffleGame() {
             winScreen.style.display = 'none';
+            // Reset Cronòmetre
+            clearInterval(timerInterval);
+            seconds = 0;
+            timerDisplay.innerText = "00:00";
+            gameRunning = false;
+
             let moves = 0;
-            const maxMoves = 120; // Per a 4x4 calen més moviments per desordenar bé
+            const maxMoves = 120;
             
             const interval = setInterval(() => {
                 const emptyIdx = pieces.indexOf(emptyValue);
@@ -155,20 +189,41 @@
                 
                 createBoard();
                 moves++;
-                if (moves >= maxMoves) clearInterval(interval);
+                if (moves >= maxMoves) {
+                    clearInterval(interval);
+                    startTimer(); // El cronòmetre comença després de barrejar
+                }
             }, 10);
+        }
+
+        function startTimer() {
+            gameRunning = true;
+            timerInterval = setInterval(() => {
+                seconds++;
+                timerDisplay.innerText = formatTime(seconds);
+            }, 1000);
         }
 
         function checkWin() {
             const win = pieces.every((val, i) => val === i);
-            if (win) {
+            if (win && gameRunning) {
+                gameRunning = false;
+                clearInterval(timerInterval);
+                finalTimeDisplay.innerText = formatTime(seconds);
+                
+                // Guardar Rècord
+                if (!bestTime || seconds < bestTime) {
+                    bestTime = seconds;
+                    localStorage.setItem('puzzle_toledo_best_time', bestTime);
+                    bestTimeDisplay.innerText = formatTime(bestTime);
+                }
+
                 setTimeout(() => {
                     winScreen.style.display = 'flex';
                 }, 400);
             }
         }
 
-        // Inicialitzar
         createBoard();
     </script>
 </body>
